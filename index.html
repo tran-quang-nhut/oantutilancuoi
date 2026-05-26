@@ -27,14 +27,14 @@
   >
 
   <title>
-    Khu tự trị của Nhựt!
+    Khu tự trị của Nhựt
   </title>
 
   <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body draggable="false">
+<body>
 
   <!-- Background -->
 
@@ -52,7 +52,7 @@
       </h1>
 
       <p class="subtitle">
-        Win tui 3 game sẽ được sít rịt!
+        Thắng 3 game sẽ có sít rịt!
       </p>
 
       <!-- Round -->
@@ -89,12 +89,14 @@
             <img
               id="playerChoiceImg"
               class="choice-img"
-              src=""
+              src="Rock.png"
               alt=""
               draggable="false"
             >
 
           </div>
+
+          <!-- VS -->
 
           <div class="vs">
             VS
@@ -111,7 +113,7 @@
             <img
               id="computerChoiceImg"
               class="choice-img"
-              src=""
+              src="Paper.png"
               alt=""
               draggable="false"
             >
@@ -139,7 +141,7 @@
 
         <button
           class="choice-btn"
-          onclick="playGame('rock')"
+          onclick="startGame('rock')"
         >
 
           <img
@@ -152,7 +154,7 @@
 
         <button
           class="choice-btn"
-          onclick="playGame('paper')"
+          onclick="startGame('paper')"
         >
 
           <img
@@ -165,7 +167,7 @@
 
         <button
           class="choice-btn"
-          onclick="playGame('scissors')"
+          onclick="startGame('scissors')"
         >
 
           <img
@@ -189,15 +191,13 @@
 
       </button>
 
-      <!-- Scoreboard -->
+      <!-- Score -->
 
       <div class="scoreboard">
 
         <div class="score-item">
 
-          <div>
-            🏆
-          </div>
+          <div>🏆</div>
 
           <div class="score-label">
             Thắng
@@ -214,9 +214,7 @@
 
         <div class="score-item">
 
-          <div>
-            💀
-          </div>
+          <div>💀</div>
 
           <div class="score-label">
             Thua
@@ -233,9 +231,7 @@
 
         <div class="score-item">
 
-          <div>
-            🤝
-          </div>
+          <div>🤝</div>
 
           <div class="score-label">
             Hòa
@@ -265,7 +261,7 @@
 
     <div class="popup-box">
 
-      <div class="sparkles"></div>
+      <div class="popup-glow"></div>
 
       <img
         src="reward.png"
@@ -311,7 +307,7 @@
 
       <p>
         Bạn đã hết 10 lượt chơi
-        nhưng chưa đạt đủ 3 chiến thắng!
+        nhưng chưa đủ 3 chiến thắng!
       </p>
 
       <button id="closeLose">
@@ -328,11 +324,17 @@
     id="battleSound"
     preload="auto"
     playsinline
+    webkit-playsinline
   >
 
     <source
       src="battle.mp3"
       type="audio/mpeg"
+    >
+
+    <source
+      src="battle.wav"
+      type="audio/wav"
     >
 
   </audio>
