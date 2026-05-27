@@ -1,391 +1,236 @@
-const choices = {
+const choices = ["rock", "paper", "scissors"];
 
-  rock:"Rock.png",
-  paper:"Paper.png",
-  scissors:"Scissors.png"
-};
+const playerHand = document.getElementById("playerHand");
+const computerHand = document.getElementById("computerHand");
 
-/* SCORE */
+const playerScoreEl = document.getElementById("playerScore");
+const computerScoreEl = document.getElementById("computerScore");
 
-let win = 0;
-let lose = 0;
-let draw = 0;
+const roundNumber = document.getElementById("roundNumber");
+const statusText = document.getElementById("statusText");
 
-let totalRounds = 0;
+const popup = document.getElementById("popup");
+const popupTitle = document.getElementById("popupTitle");
+const popupDesc = document.getElementById("popupDesc");
+const popupBtn = document.getElementById("popupBtn");
+const popupImage = document.getElementById("popupImage");
 
-const MAX_ROUNDS = 10;
+const clickSound = document.getElementById("clickSound");
+const shakeSound = document.getElementById("shakeSound");
+const winSound = document.getElementById("winSound");
+const loseSound = document.getElementById("loseSound");
 
-const TARGET_WIN = 3;
+const buttons = document.querySelectorAll(".choice-btn");
 
-let isPlaying = false;
-
+let playerScore = 0;
+let computerScore = 0;
+let currentRound = 1;
 let gameEnded = false;
 
-/* ELEMENTS */
-
-const playerImg =
-document.getElementById(
-  "playerImg"
-);
-
-const computerImg =
-document.getElementById(
-  "computerImg"
-);
-
-const resultText =
-document.getElementById(
-  "result"
-);
-
-const continueBtn =
-document.getElementById(
-  "continueBtn"
-);
-
-const roundText =
-document.getElementById(
-  "roundText"
-);
-
-const winScore =
-document.getElementById(
-  "winScore"
-);
-
-const loseScore =
-document.getElementById(
-  "loseScore"
-);
-
-const drawScore =
-document.getElementById(
-  "drawScore"
-);
-
-/* POPUP */
-
-const winPopup =
-document.getElementById(
-  "winPopup"
-);
-
-const losePopup =
-document.getElementById(
-  "losePopup"
-);
-
-/* AUDIO */
-
-const battleSound =
-document.getElementById(
-  "battleSound"
-);
-
-/* UNLOCK AUDIO MOBILE */
-
-let audioUnlocked = false;
-
-function unlockAudio(){
-
-  if(audioUnlocked) return;
-
-  battleSound.play()
-  .then(() => {
-
-    battleSound.pause();
-
-    battleSound.currentTime = 0;
-
-    audioUnlocked = true;
-  })
-  .catch(() => {});
-}
-
-document.addEventListener(
-  "touchstart",
-  unlockAudio,
-  { once:true }
-);
-
-document.addEventListener(
-  "click",
-  unlockAudio,
-  { once:true }
-);
-
-/* RANDOM */
-
-function randomChoice(){
-
-  const arr = [
-    "rock",
-    "paper",
-    "scissors"
-  ];
-
-  return arr[
-    Math.floor(Math.random()*3)
-  ];
-}
-
-/* START GAME */
-
-async function startGame(choice){
-
-  if(isPlaying) return;
-
-  if(gameEnded) return;
-
-  if(totalRounds >= MAX_ROUNDS)
-  return;
-
-  isPlaying = true;
-
-  continueBtn.style.display =
-  "none";
-
-  resultText.innerHTML =
-  "⏳ Đang ra kéo búa bao...";
-
-  /* RESET AUDIO */
-
-  try{
-
-    battleSound.pause();
-
-    battleSound.currentTime = 0;
-
-    await battleSound.play();
-
-  }
-
-  catch(err){
-
-    console.log(err);
-  }
-
-  /* 3 SECOND ANIMATION */
-
-  const duration = 3000;
-
-  const interval = 300;
-
-  const loops =
-  duration / interval;
-
-  for(let i = 0; i < loops; i++){
-
-    playerImg.src =
-    choices[randomChoice()];
-
-    computerImg.src =
-    choices[randomChoice()];
-
-    playerImg.classList.add(
-      "battle-animation"
-    );
-
-    computerImg.classList.add(
-      "battle-animation"
-    );
-
-    setTimeout(() => {
-
-      playerImg.classList.remove(
-        "battle-animation"
-      );
-
-      computerImg.classList.remove(
-        "battle-animation"
-      );
-
-    },250);
-
-    await new Promise(resolve =>
-      setTimeout(resolve,interval)
-    );
-  }
-
-  /* FINAL RESULT */
-
-  const computerChoice =
-  randomChoice();
-
-  playerImg.src =
-  choices[choice];
-
-  computerImg.src =
-  choices[computerChoice];
-
-  totalRounds++;
-
-  roundText.innerHTML =
-  `${totalRounds} / ${MAX_ROUNDS}`;
-
-  let result = "";
-
-  /* DRAW */
-
-  if(choice === computerChoice){
-
-    draw++;
-
-    result =
-    "🤝 Hòa rồi!";
-  }
-
-  /* WIN */
-
-  else if(
-
-    (choice === "rock" &&
-    computerChoice === "scissors")
-
-    ||
-
-    (choice === "paper" &&
-    computerChoice === "rock")
-
-    ||
-
-    (choice === "scissors" &&
-    computerChoice === "paper")
-  ){
-
-    win++;
-
-    result =
-    "🎉 Bạn thắng!";
-
-    launchConfetti();
-  }
-
-  /* LOSE */
-
-  else{
-
-    lose++;
-
-    result =
-    "😵 Bạn thua!";
-  }
-
-  resultText.innerHTML =
-  result;
-
-  winScore.innerHTML = win;
-
-  loseScore.innerHTML = lose;
-
-  drawScore.innerHTML = draw;
-
-  continueBtn.style.display =
-  "inline-block";
-
-  /* WIN POPUP */
-
-  if(win >= TARGET_WIN){
-
-    gameEnded = true;
-
-    setTimeout(() => {
-
-      winPopup.classList.add(
-        "show"
-      );
-
-      launchConfetti();
-
-    },700);
-  }
-
-  /* LOSE POPUP */
-
-  else if(
-
-    totalRounds >= MAX_ROUNDS
-    &&
-    win < TARGET_WIN
-  ){
-
-    gameEnded = true;
-
-    setTimeout(() => {
-
-      losePopup.classList.add(
-        "show"
-      );
-
-    },700);
-  }
-
-  isPlaying = false;
-}
-
-/* CONTINUE */
-
-continueBtn.addEventListener(
-  "click",
-  () => {
+const images = {
+  rock:"assets/img/rock.jpg",
+  paper:"assets/img/paper.jpg",
+  scissors:"assets/img/scissors.jpg"
+};
+
+buttons.forEach(btn=>{
+
+  btn.addEventListener("click",()=>{
 
     if(gameEnded) return;
 
-    resultText.innerHTML =
-    "Chọn vũ khí 👇";
+    clickSound.play();
 
-    continueBtn.style.display =
-    "none";
-  }
-);
+    const playerChoice = btn.dataset.choice;
+    const computerChoice =
+      choices[Math.floor(Math.random()*3)];
 
-/* CLOSE POPUP */
+    startBattleAnimation(playerChoice,computerChoice);
 
-document.getElementById(
-  "closeWin"
-).onclick = () => {
+  });
 
-  winPopup.classList.remove(
-    "show"
-  );
-};
+});
 
-document.getElementById(
-  "closeLose"
-).onclick = () => {
+function startBattleAnimation(playerChoice,computerChoice){
 
-  losePopup.classList.remove(
-    "show"
-  );
-};
+  disableButtons();
 
-/* CONFETTI */
+  playerHand.classList.add("shake-player");
+  computerHand.classList.add("shake-computer");
 
-function launchConfetti(){
+  shakeSound.currentTime = 0;
+  shakeSound.play();
 
-  for(let i = 0; i < 20; i++){
+  setTimeout(()=>{
 
-    const confetti =
-    document.createElement("div");
+    playerHand.classList.remove("shake-player");
+    computerHand.classList.remove("shake-computer");
 
-    confetti.classList.add(
-      "confetti"
-    );
+    playerHand.src = images[playerChoice];
+    computerHand.src = images[computerChoice];
 
-    confetti.style.left =
-    Math.random()*100 + "vw";
+    decideWinner(playerChoice,computerChoice);
 
-    confetti.style.animationDuration =
-    (Math.random()*2 + 2) + "s";
+    enableButtons();
 
-    document.body.appendChild(
-      confetti
-    );
+  },3000);
 
-    setTimeout(() => {
-
-      confetti.remove();
-
-    },4000);
-  }
 }
+
+function decideWinner(player,computer){
+
+  let result = "";
+
+  if(player === computer){
+
+    result = "Hòa 😆";
+
+  }
+
+  else if(
+    (player==="rock" && computer==="scissors") ||
+    (player==="paper" && computer==="rock") ||
+    (player==="scissors" && computer==="paper")
+  ){
+
+    playerScore++;
+    result = "Bạn thắng round này 🎉";
+
+  }
+
+  else{
+
+    computerScore++;
+    result = "Nhựt thắng round này 😢";
+
+  }
+
+  statusText.innerText = result;
+
+  playerScoreEl.innerText = playerScore;
+  computerScoreEl.innerText = computerScore;
+
+  checkGame();
+
+}
+
+function checkGame(){
+
+  if(playerScore === 3){
+
+    gameEnded = true;
+
+    winSound.play();
+
+    showPopup(
+      "🎉 Bạn đã thắng roài, hay dữ luôn 💖🏆",
+      "Đỉnh của chóp lun nè ✨",
+      "assets/img/win-popup.jpg",
+      "Chơi Lại"
+    );
+
+  }
+
+  else if(computerScore === 3){
+
+    gameEnded = true;
+
+    loseSound.play();
+
+    showPopup(
+      "😵 Xui thoai, thử lại i 💖✨",
+      "Không sao hết, trả thù tiếp nè 🔥",
+      "assets/img/lose-popup.jpg",
+      "Trả Thù"
+    );
+
+  }
+
+  else{
+
+    currentRound++;
+
+    if(currentRound <= 5){
+      roundNumber.innerText = currentRound;
+    }
+
+  }
+
+}
+
+function showPopup(title,desc,image,buttonText){
+
+  popup.classList.remove("hidden");
+
+  popupTitle.innerText = title;
+  popupDesc.innerText = desc;
+  popupImage.src = image;
+
+  popupBtn.innerText = buttonText;
+
+}
+
+popupBtn.addEventListener("click",resetGame);
+
+document.getElementById("resetBtn")
+.addEventListener("click",resetGame);
+
+function resetGame(){
+
+  playerScore = 0;
+  computerScore = 0;
+  currentRound = 1;
+  gameEnded = false;
+
+  playerScoreEl.innerText = 0;
+  computerScoreEl.innerText = 0;
+  roundNumber.innerText = 1;
+
+  statusText.innerText = "Game mới bắt đầu ✨";
+
+  playerHand.src = images.rock;
+  computerHand.src = images.rock;
+
+  popup.classList.add("hidden");
+
+}
+
+function disableButtons(){
+
+  buttons.forEach(btn=>{
+    btn.disabled = true;
+    btn.style.opacity = 0.5;
+  });
+
+}
+
+function enableButtons(){
+
+  buttons.forEach(btn=>{
+    btn.disabled = false;
+    btn.style.opacity = 1;
+  });
+
+}
+
+document.getElementById("avatarUpload")
+.addEventListener("change",(e)=>{
+
+  const file = e.target.files[0];
+
+  if(file){
+
+    const reader = new FileReader();
+
+    reader.onload = function(event){
+
+      document.getElementById("playerAvatar")
+      .src = event.target.result;
+
+    };
+
+    reader.readAsDataURL(file);
+
+  }
+
+});

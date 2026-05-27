@@ -1,316 +1,152 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kéo Búa Bao Cute Battle</title>
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="
-      width=device-width,
-      initial-scale=1,
-      viewport-fit=cover,
-      user-scalable=no
-    "
-  >
-
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
-
-  <title>
-    metlamroinha
-  </title>
-
-  <link rel="stylesheet" href="style.css">
-
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- BACKGROUND -->
+  <div class="container">
 
-  <div class="bg bg1"></div>
-  <div class="bg bg2"></div>
+    <div class="top-bar">
+      <h1>🎮 Kéo Búa Bao - Thắng được mình 3 game thì..</h1>
+      <button id="resetBtn">Reset Game</button>
+    </div>
 
-  <!-- APP -->
+    <!-- SCORE -->
+    <div class="score-board">
 
-  <main class="app">
+      <div class="player-card">
 
-    <div class="container">
+        <div class="avatar-box">
+          <img id="playerAvatar"
+            src="assets/img/player-default.jpg"
+            alt="">
+        </div>
 
-      <h1>
-        🎮 Hữu diên sẽ thắng
-      </h1>
+        <input type="file" id="avatarUpload" accept="image/*">
 
-      <p class="subtitle">
-        Đánh bại Nhựt để nhận thưởng
-      </p>
+        <h2>Người Chơi</h2>
 
-      <!-- ROUND -->
-
-      <div class="round-box">
-
-        <span>
-          Lượt chơi:
-        </span>
-
-        <span id="roundText">
-          0 / 10
-        </span>
+        <div class="score">
+          <span id="playerScore">0</span>
+        </div>
 
       </div>
 
-      <!-- BATTLE -->
+      <div class="round-info">
 
-      <section class="battle">
-
-        <div class="player-card">
-
-          <div class="player-name">
-            Bạn
-          </div>
-
-          <img
-            id="playerImg"
-            class="weapon"
-            src="Rock.png"
-            alt=""
-            draggable="false"
-          >
-
+        <div class="round-text">
+          Round <span id="roundNumber">1</span>/5
         </div>
 
-        <div class="vs">
-          VS
+        <div class="status-text" id="statusText">
+          Chọn chiêu để bắt đầu ✨
         </div>
-
-        <div class="player-card">
-
-          <div class="player-name">
-            Nhựt
-          </div>
-
-          <img
-            id="computerImg"
-            class="weapon"
-            src="Paper.png"
-            alt=""
-            draggable="false"
-          >
-
-        </div>
-
-      </section>
-
-      <!-- RESULT -->
-
-      <div
-        class="result"
-        id="result"
-      >
-
-        Chọn vũ khí 👇
 
       </div>
 
-      <!-- CHOICES -->
+      <div class="player-card">
 
-      <div class="choices">
-
-        <button
-          class="choice-btn"
-          onclick="startGame('rock')"
-        >
-
-          <img
-            src="Rock.png"
-            alt=""
-          >
-
-        </button>
-
-        <button
-          class="choice-btn"
-          onclick="startGame('paper')"
-        >
-
-          <img
-            src="Paper.png"
-            alt=""
-          >
-
-        </button>
-
-        <button
-          class="choice-btn"
-          onclick="startGame('scissors')"
-        >
-
-          <img
-            src="Scissors.png"
-            alt=""
-          >
-
-        </button>
-
-      </div>
-
-      <!-- CONTINUE -->
-
-      <button
-        class="continue-btn"
-        id="continueBtn"
-      >
-
-        🔄 Chơi tiếp
-
-      </button>
-
-      <!-- SCORE -->
-
-      <div class="scoreboard">
-
-        <div class="score-box">
-
-          <div>
-            🏆
-          </div>
-
-          <div>
-            Thắng
-          </div>
-
-          <div id="winScore">
-            0
-          </div>
-
+        <div class="avatar-box">
+          <img src="assets/img/computer-avatar.jpg" alt="">
         </div>
 
-        <div class="score-box">
+        <h2>Nhựt</h2>
 
-          <div>
-            💀
-          </div>
-
-          <div>
-            Thua
-          </div>
-
-          <div id="loseScore">
-            0
-          </div>
-
-        </div>
-
-        <div class="score-box">
-
-          <div>
-            🤝
-          </div>
-
-          <div>
-            Hòa
-          </div>
-
-          <div id="drawScore">
-            0
-          </div>
-
+        <div class="score">
+          <span id="computerScore">0</span>
         </div>
 
       </div>
 
     </div>
 
-  </main>
+    <!-- ARENA -->
+    <div class="battle-area">
 
-  <!-- WIN POPUP -->
+      <div class="hand-section">
 
-  <div
-    class="popup"
-    id="winPopup"
-  >
+        <p>Người chơi</p>
 
-    <div class="popup-box">
+        <div class="hand-wrapper">
+          <img id="playerHand"
+            src="assets/img/rock.jpg"
+            class="battle-hand"
+            alt="">
+        </div>
 
-      <img
-        src="reward.png"
-        class="popup-img"
-        alt=""
-      >
+      </div>
 
-      <h2>
-        🎉 CHÚC MỪNG 🎉
-      </h2>
+      <div class="vs-text">
+        VS
+      </div>
 
-      <p>
-        Bạn đã thắng đủ 3 trận
-        và nhận được phần thưởng!
-      </p>
+      <div class="hand-section">
 
-      <button id="closeWin">
-        Nhận thưởng
+        <p>Nhựt</p>
+
+        <div class="hand-wrapper">
+          <img id="computerHand"
+            src="assets/img/rock.jpg"
+            class="battle-hand enemy"
+            alt="">
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+
+      <button class="choice-btn" data-choice="rock">
+        ✊ Búa
+      </button>
+
+      <button class="choice-btn" data-choice="paper">
+        ✋ Bao
+      </button>
+
+      <button class="choice-btn" data-choice="scissors">
+        ✌️ Kéo
       </button>
 
     </div>
 
   </div>
 
-  <!-- LOSE POPUP -->
+  <!-- POPUP -->
+  <div class="popup hidden" id="popup">
 
-  <div
-    class="popup"
-    id="losePopup"
-  >
+    <div class="popup-content">
 
-    <div class="popup-box">
+      <img id="popupImage"
+        src=""
+        class="popup-image"
+        alt="">
 
-      <img
-        src="lose.png"
-        class="popup-img"
-        alt=""
-      >
+      <h2 id="popupTitle"></h2>
 
-      <h2>
-        😢 THẤT BẠI
-      </h2>
+      <p id="popupDesc"></p>
 
-      <p>
-        Bạn đã hết 10 lượt
-        nhưng chưa đủ 3 chiến thắng!
-      </p>
-
-      <button id="closeLose">
-        Đóng
-      </button>
+      <button id="popupBtn">Chơi Lại</button>
 
     </div>
 
   </div>
 
   <!-- AUDIO -->
-
-  <audio
-    id="battleSound"
-    preload="auto"
-    playsinline
-    webkit-playsinline
-  >
-
-    <source
-      src="battle.mp3"
-      type="audio/mpeg"
-    >
-
-    <source
-      src="battle.wav"
-      type="audio/wav"
-    >
-
-  </audio>
+  <audio id="shakeSound" src="assets/sound/shake.mp3"></audio>
+  <audio id="winSound" src="assets/sound/win.mp3"></audio>
+  <audio id="loseSound" src="assets/sound/lose.mp3"></audio>
+  <audio id="clickSound" src="assets/sound/click.mp3"></audio>
 
   <script src="script.js"></script>
 
