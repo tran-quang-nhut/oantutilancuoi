@@ -7,7 +7,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"/>
+    content="width=device-width, initial-scale=1.0" />
 
   <title>Kéo Búa Bao Cute Battle</title>
 
@@ -19,24 +19,25 @@
     rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 
 </head>
 
 <body>
 
-  <!-- BACKGROUND BLUR -->
+  <!-- BLUR BACKGROUND -->
   <div class="blur blur1"></div>
   <div class="blur blur2"></div>
   <div class="blur blur3"></div>
 
+  <!-- MAIN -->
   <div class="container">
 
     <!-- HEADER -->
     <div class="header">
 
       <h1>
-        🎮 Kéo | Búa | Bao -- Thắng 3/5 sẽ được...
+        🎮 Kéo | Búa | Bao --- Thắng Nhựt 3/5 sẽ được...
       </h1>
 
       <button id="resetBtn">
@@ -49,7 +50,9 @@
     <div class="score-board">
 
       <!-- PLAYER -->
-      <div class="card glass">
+      <div
+        class="card glass"
+        id="playerCard">
 
         <div class="avatar-box">
 
@@ -103,7 +106,9 @@
       </div>
 
       <!-- COMPUTER -->
-      <div class="card glass">
+      <div
+        class="card glass"
+        id="computerCard">
 
         <div class="avatar-box">
 
@@ -169,7 +174,7 @@
 
     </div>
 
-    <!-- BUTTONS -->
+    <!-- BUTTON -->
     <div class="controls">
 
       <button

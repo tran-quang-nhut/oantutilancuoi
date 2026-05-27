@@ -16,6 +16,12 @@ document.getElementById("playerHand");
 const computerHand =
 document.getElementById("computerHand");
 
+const playerCard =
+document.getElementById("playerCard");
+
+const computerCard =
+document.getElementById("computerCard");
+
 const playerScoreEl =
 document.getElementById("playerScore");
 
@@ -73,7 +79,7 @@ Object.values(images).forEach(src=>{
 
 });
 
-/* AUDIO FIX */
+/* AUDIO PRELOAD */
 
 [
   clickSound,
@@ -109,7 +115,7 @@ buttons.forEach(button=>{
 
 });
 
-/* GAME */
+/* MAIN GAME */
 
 async function playRound(playerChoice,computerChoice){
 
@@ -147,17 +153,25 @@ async function playRound(playerChoice,computerChoice){
 
 function startShake(){
 
-  playerHand.classList.add("shake-player");
+  playerHand.classList.add(
+    "shake-player"
+  );
 
-  computerHand.classList.add("shake-computer");
+  computerHand.classList.add(
+    "shake-computer"
+  );
 
 }
 
 function stopShake(){
 
-  playerHand.classList.remove("shake-player");
+  playerHand.classList.remove(
+    "shake-player"
+  );
 
-  computerHand.classList.remove("shake-computer");
+  computerHand.classList.remove(
+    "shake-computer"
+  );
 
 }
 
@@ -165,9 +179,79 @@ function stopShake(){
 
 function updateHands(player,computer){
 
-  playerHand.src = images[player];
+  playerHand.src =
+  images[player];
 
-  computerHand.src = images[computer];
+  computerHand.src =
+  images[computer];
+
+}
+
+/* ROUND EFFECT */
+
+function showRoundEffect(winner){
+
+  clearEffects();
+
+  if(winner === "player"){
+
+    playerCard.classList.add(
+      "winner-effect"
+    );
+
+    playerHand.classList.add(
+      "winner-effect"
+    );
+
+    computerCard.classList.add(
+      "loser-effect"
+    );
+
+  }
+
+  else if(winner === "computer"){
+
+    computerCard.classList.add(
+      "winner-effect"
+    );
+
+    computerHand.classList.add(
+      "winner-effect"
+    );
+
+    playerCard.classList.add(
+      "loser-effect"
+    );
+
+  }
+
+  setTimeout(()=>{
+
+    clearEffects();
+
+  },800);
+
+}
+
+function clearEffects(){
+
+  playerCard.classList.remove(
+    "winner-effect",
+    "loser-effect"
+  );
+
+  computerCard.classList.remove(
+    "winner-effect",
+    "loser-effect"
+  );
+
+  playerHand.classList.remove(
+    "winner-effect"
+  );
+
+  computerHand.classList.remove(
+    "winner-effect"
+  );
 
 }
 
@@ -207,6 +291,8 @@ function decideWinner(player,computer){
     statusText.innerText =
     "Bạn thắng round này 🎉";
 
+    showRoundEffect("player");
+
   }
 
   else{
@@ -218,6 +304,8 @@ function decideWinner(player,computer){
 
     statusText.innerText =
     "Nhựt thắng round này 😢";
+
+    showRoundEffect("computer");
 
   }
 
@@ -309,7 +397,9 @@ function showPopup(
   buttonText
 ){
 
-  popup.classList.remove("hidden");
+  popup.classList.remove(
+    "hidden"
+  );
 
   popupTitle.innerText = title;
 
@@ -348,7 +438,11 @@ function resetGame(){
   computerHand.src =
   images.rock;
 
-  popup.classList.add("hidden");
+  popup.classList.add(
+    "hidden"
+  );
+
+  clearEffects();
 
   enableButtons();
 
