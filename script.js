@@ -23,31 +23,24 @@ let gameEnded = false;
 
 /* ELEMENTS */
 
-const resultText =
-document.getElementById("result");
-
 const playerImg =
 document.getElementById(
-  "playerChoiceImg"
+  "playerImg"
 );
 
 const computerImg =
 document.getElementById(
-  "computerChoiceImg"
+  "computerImg"
 );
 
-const winScore =
-document.getElementById("winScore");
-
-const loseScore =
-document.getElementById("loseScore");
-
-const drawScore =
-document.getElementById("drawScore");
-
-const playAgainBtn =
+const resultText =
 document.getElementById(
-  "playAgainBtn"
+  "result"
+);
+
+const continueBtn =
+document.getElementById(
+  "continueBtn"
 );
 
 const roundText =
@@ -55,26 +48,31 @@ document.getElementById(
   "roundText"
 );
 
+const winScore =
+document.getElementById(
+  "winScore"
+);
+
+const loseScore =
+document.getElementById(
+  "loseScore"
+);
+
+const drawScore =
+document.getElementById(
+  "drawScore"
+);
+
 /* POPUP */
 
-const rewardPopup =
+const winPopup =
 document.getElementById(
-  "rewardPopup"
+  "winPopup"
 );
 
 const losePopup =
 document.getElementById(
   "losePopup"
-);
-
-const closeReward =
-document.getElementById(
-  "closeReward"
-);
-
-const closeLose =
-document.getElementById(
-  "closeLose"
 );
 
 /* AUDIO */
@@ -84,33 +82,37 @@ document.getElementById(
   "battleSound"
 );
 
-/* START GAME */
+/* UNLOCK AUDIO MOBILE */
 
-function startGame(choice){
+let audioUnlocked = false;
 
-  if(isPlaying) return;
+function unlockAudio(){
 
-  try{
+  if(audioUnlocked) return;
+
+  battleSound.play()
+  .then(() => {
+
+    battleSound.pause();
 
     battleSound.currentTime = 0;
 
-    const playPromise =
-    battleSound.play();
-
-    if(playPromise !== undefined){
-
-      playPromise.catch(() => {});
-    }
-
-  }
-
-  catch(err){
-
-    console.log(err);
-  }
-
-  playGame(choice);
+    audioUnlocked = true;
+  })
+  .catch(() => {});
 }
+
+document.addEventListener(
+  "touchstart",
+  unlockAudio,
+  { once:true }
+);
+
+document.addEventListener(
+  "click",
+  unlockAudio,
+  { once:true }
+);
 
 /* RANDOM */
 
@@ -127,9 +129,9 @@ function randomChoice(){
   ];
 }
 
-/* GAME */
+/* START GAME */
 
-async function playGame(playerChoice){
+async function startGame(choice){
 
   if(isPlaying) return;
 
@@ -140,15 +142,39 @@ async function playGame(playerChoice){
 
   isPlaying = true;
 
+  continueBtn.style.display =
+  "none";
+
   resultText.innerHTML =
   "⏳ Đang ra kéo búa bao...";
 
-  playAgainBtn.style.display =
-  "none";
+  /* RESET AUDIO */
 
-  /* ANIMATION */
+  try{
 
-  for(let i = 0; i < 3; i++){
+    battleSound.pause();
+
+    battleSound.currentTime = 0;
+
+    await battleSound.play();
+
+  }
+
+  catch(err){
+
+    console.log(err);
+  }
+
+  /* 3 SECOND ANIMATION */
+
+  const duration = 3000;
+
+  const interval = 300;
+
+  const loops =
+  duration / interval;
+
+  for(let i = 0; i < loops; i++){
 
     playerImg.src =
     choices[randomChoice()];
@@ -174,28 +200,20 @@ async function playGame(playerChoice){
         "battle-animation"
       );
 
-    },900);
+    },250);
 
     await new Promise(resolve =>
-      setTimeout(resolve,1000)
+      setTimeout(resolve,interval)
     );
   }
 
-  /* RESULT */
-
-  const computerChoices = [
-    "rock",
-    "paper",
-    "scissors"
-  ];
+  /* FINAL RESULT */
 
   const computerChoice =
-  computerChoices[
-    Math.floor(Math.random()*3)
-  ];
+  randomChoice();
 
   playerImg.src =
-  choices[playerChoice];
+  choices[choice];
 
   computerImg.src =
   choices[computerChoice];
@@ -209,34 +227,36 @@ async function playGame(playerChoice){
 
   /* DRAW */
 
-  if(playerChoice === computerChoice){
-
-    result = "🤝 Hòa rồi!";
+  if(choice === computerChoice){
 
     draw++;
+
+    result =
+    "🤝 Hòa rồi!";
   }
 
   /* WIN */
 
   else if(
 
-    (playerChoice === "rock" &&
+    (choice === "rock" &&
     computerChoice === "scissors")
 
     ||
 
-    (playerChoice === "paper" &&
+    (choice === "paper" &&
     computerChoice === "rock")
 
     ||
 
-    (playerChoice === "scissors" &&
+    (choice === "scissors" &&
     computerChoice === "paper")
   ){
 
-    result = "🎉 Bạn thắng!";
-
     win++;
+
+    result =
+    "🎉 Bạn thắng!";
 
     launchConfetti();
   }
@@ -245,12 +265,14 @@ async function playGame(playerChoice){
 
   else{
 
-    result = "😵 Bạn thua!";
-
     lose++;
+
+    result =
+    "😵 Bạn thua!";
   }
 
-  resultText.innerHTML = result;
+  resultText.innerHTML =
+  result;
 
   winScore.innerHTML = win;
 
@@ -258,7 +280,7 @@ async function playGame(playerChoice){
 
   drawScore.innerHTML = draw;
 
-  playAgainBtn.style.display =
+  continueBtn.style.display =
   "inline-block";
 
   /* WIN POPUP */
@@ -269,7 +291,7 @@ async function playGame(playerChoice){
 
     setTimeout(() => {
 
-      rewardPopup.classList.add(
+      winPopup.classList.add(
         "show"
       );
 
@@ -303,41 +325,39 @@ async function playGame(playerChoice){
 
 /* CONTINUE */
 
-playAgainBtn.addEventListener(
+continueBtn.addEventListener(
   "click",
   () => {
 
     if(gameEnded) return;
 
     resultText.innerHTML =
-    "Chọn vũ khí của bạn 👇";
+    "Chọn vũ khí 👇";
 
-    playAgainBtn.style.display =
+    continueBtn.style.display =
     "none";
   }
 );
 
-/* POPUP CLOSE */
+/* CLOSE POPUP */
 
-closeReward.addEventListener(
-  "click",
-  () => {
+document.getElementById(
+  "closeWin"
+).onclick = () => {
 
-    rewardPopup.classList.remove(
-      "show"
-    );
-  }
-);
+  winPopup.classList.remove(
+    "show"
+  );
+};
 
-closeLose.addEventListener(
-  "click",
-  () => {
+document.getElementById(
+  "closeLose"
+).onclick = () => {
 
-    losePopup.classList.remove(
-      "show"
-    );
-  }
-);
+  losePopup.classList.remove(
+    "show"
+  );
+};
 
 /* CONFETTI */
 
